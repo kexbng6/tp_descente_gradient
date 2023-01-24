@@ -6,7 +6,7 @@ import math_function_descente_gradient as mfdg
 """
 Données d'initisalisation pour les calculs
 """
-pointInitial = [20, 30]
+pointInitial = [3, 4]
 momentum = 0.3
 learning = 0.03
 maxIter = 3000
@@ -17,10 +17,10 @@ b2 = 0.999
 """
 Fonction tester
 """
-fct = lambda x, bg: x ** 3 + 2 * bg ** 2
-boothFunction = lambda x, y: (x + 2 * y - 7) ** 2 + (2 * x + y - 5) ** 2
-himmelblauFunction = lambda x, y: (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2
-
+fct = lambda x, y: x ** 3 + 2 * y ** 2
+boothFunction = lambda x, y: (x + 2 * y - 7) ** 2 + (2 * x + y - 5) ** 2 #min global -> f(1,3) = 0
+himmelblauFunction = lambda x, y: (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2 #min global -> f(3.0,2.0) = 0
+McCormickFunction = lambda x,y: np.sin(x+y) + (x-y)**2 - 1.5*x + 2.5*y + 1 #min global -> f(-0.54719, -1.54719 = -1.9133
 
 ########################################################################################################################
 
@@ -175,9 +175,9 @@ if __name__ == "__main__":
                                      mfdg.max_iter)
     #affichage(df3,boothFunction)
 
-    df4 = gradient_descent2D_AdAM(himmelblauFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
+    df4 = gradient_descent2D_AdAM(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
                                      mfdg.max_iter)
-    affichage(df4,himmelblauFunction)
+    affichage(df4,boothFunction)
 
 
 
