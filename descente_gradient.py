@@ -7,10 +7,12 @@ import math_function_descente_gradient as mfdg
 Données d'initisalisation pour les calculs
 """
 pointInitial = [20, 30]
-momentum = 0
+momentum = 0.3
 learning = 0.03
 maxIter = 3000
 tolerance = 1e-05
+b1k = 0.9
+b2k = 0.999
 
 """
 Fonction tester
@@ -87,6 +89,39 @@ def gradient_descent2DMomentum(cost, start, learn_rate, momentum, tolerance, n_i
         df.loc[k] = [k, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
         grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
         step = learn_rate * grad + momentum * step
+        vector = vector - step
+        normGrad = np.linalg.norm(grad)
+        if np.all(np.abs(normGrad) <= tolerance):
+            df.loc[k + 1] = [k + 1, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
+            break
+    return df
+
+def gradient_descent2D_AdAM(cost, start, learn_rate, momentum, tolerance, n_iter):
+    """
+    Fonction de descente de gradient avec Momentum
+    :param cost: Coût
+    :param start: Point de départ
+    :param learn_rate: Fréquence d'apprentissage
+    :param momentum: Momentum
+    :param tolerance: Condition d'arrêt
+    :param n_iter: Nombre d'itération maxmimum
+    :return: tableau contentenant toutes les données du calculs
+    """
+    df = pd.DataFrame(columns=["Iteration", "X", "Y", "Cost", "Stepx", "Stepy", 'NormGrad'])
+    vector = start
+    grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
+    normGrad = np.linalg.norm(grad)
+    step = np.array([0, 0])
+    mk = 0  # moyenne mobile
+    vk = 0  # moyenne mobile
+
+    for k in range(n_iter):
+        mk = mk/(1-b1k)
+        vk = vk/(1-b2k)
+        learn_rate = learn_rate/(np.sqrt(vk)+mfdg.epsilon)
+        df.loc[k] = [k, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
+        grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
+        step = step - learn_rate * mk #learn_rate * grad + momentum * step
         vector = vector - step
         normGrad = np.linalg.norm(grad)
         if np.all(np.abs(normGrad) <= tolerance):
