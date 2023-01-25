@@ -110,19 +110,24 @@ def gradient_descent2D_AdAM(cost, start, learn_rate, momentum, tolerance, n_iter
     df = pd.DataFrame(columns=["Iteration", "X", "Y", "Cost", "Stepx", "Stepy", 'NormGrad'])
     vector = start
     grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
-    #normGrad = np.linalg.norm(grad)
+    normGrad = np.linalg.norm(grad)
     step = np.array([0, 0])
-    mk = 0  # moyenne mobile
-    vk = 0  # moyenne mobile
+    #mk = 0  # moyenne mobile
+    mk = np.array([0,0])
+    vk = np.array([0,0])
+    t=0
+    #vk = 0  # moyenne mobile
 
     for k in range(n_iter):
+        t+=1
+        #grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
         grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
-        mk = b1*mk-1 + (1-b1) * grad #β1mk−1 + (1 − β1)∇fk
-        vk = b2*vk-1 +(1 - b2) * pow(grad,2) # β2vk−1 + (1 − β2)∇fk ⊙ ∇fk
-        mk = mk/(1-pow(b1,k+1))
-        vk = vk/(1-pow(b2,k+1))
-        learn_rate = learn_rate/(np.sqrt(vk)+mfdg.epsilon)
-        step = step - learn_rate * mk #learn_rate * grad + momentum * step
+        mk = b1*mk + (1-b1) * grad #β1mk−1 + (1 − β1)∇fk
+        vk = b2*vk + (1 - b2) * grad**2 # β2vk−1 + (1 − β2)∇fk ⊙ ∇fk
+        m_corr = mk/(1-b1**t)
+        v_corr = vk/(1-b2**t)
+        step = learn_rate*m_corr/(np.sqrt(v_corr)+mfdg.epsilon)
+        #step = step - learn_rate * mk #learn_rate * grad + momentum * step
         vector = vector - step
         normGrad = np.linalg.norm(grad)
         df.loc[k] = [k, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
@@ -140,6 +145,7 @@ def affichage(resultDF,function):
     :param resultDF: Tableau générer DF par les fonctions de calculs
     """
     scale = 30
+    print(resultDF)
     X, Y = np.mgrid[-scale:scale:30j, -scale:scale:30j]
     Z = function(X,Y)
     figure2 = plt.figure(1)
