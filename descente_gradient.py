@@ -2,14 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import math_function_descente_gradient as mfdg
+from matplotlib.colors import LogNorm
 
 """
 Données d'initisalisation pour les calculs
 """
-pointInitial = [3, 4]
+pointInitial = [10, 10]
 momentum = 0.3
 learning = 0.03
-maxIter = 3000
+maxIter = 300000
 tolerance = 1e-05
 b1 = 0.9
 b2 = 0.999
@@ -150,11 +151,11 @@ def affichage(resultDF,function):
     Z = function(X,Y)
     figure2 = plt.figure(1)
     ax = plt.axes(projection='3d')
-    ax.plot_surface(X, Y, Z, cmap='pink', rstride=1, cstride=1, alpha=0.8)
+    ax.plot_surface(X, Y, Z, cmap='jet', norm=LogNorm(), rstride=1, cstride=1, alpha=0.99)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
-    ax.contour(X, Y, Z, 20, lw=3, cmap='RdGy', offset=-1)
-    #ax.plot(sol['X'],sol['Y'],'-o', color='black')
+    ax.contour(X, Y, Z, 30, lw=3, cmap='RdGy', offset=-1)
+    #ax.plot(resultDF['X'],resultDF['Y'],'-o', color='black')
 
     figure2 = plt.figure(2)
     plt.contour(X, Y, Z, 20, lw=3, cmap='RdGy')
@@ -173,12 +174,11 @@ if __name__ == "__main__":
                                      mfdg.max_iter)
     #affichage(df1,fct)
 
-    df2 = gradient_descent2DMomentum(himmelblauFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
-                                     mfdg.max_iter)
+    #df2 = gradient_descent2DMomentum(himmelblauFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
+                                     #mfdg.max_iter)
     #affichage(df2,himmelblauFunction)
 
-    df3 = gradient_descent2DMomentum(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
-                                     mfdg.max_iter)
+    df3 = gradient_descent2DMomentum(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,mfdg.max_iter)
     #affichage(df3,boothFunction)
 
     df4 = gradient_descent2D_AdAM(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
