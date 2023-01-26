@@ -170,8 +170,8 @@ def affichage(resultDF,function):
 ########################################################################################################################
 
 if __name__ == "__main__":
-    dfsimple = gradient_descent2D(McCormickFunction,mfdg.point_init,mfdg.lambda_k,tolerance,mfdg.max_iter)
-    #affichage(dfsimple, McCormickFunction)
+    dfsimple = gradient_descent2D(boothFunction,mfdg.point_init,mfdg.lambda_k,tolerance,mfdg.max_iter)
+    affichage(dfsimple, boothFunction)
 
     df1 = gradient_descent2DMomentum(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
                                      mfdg.max_iter)
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     #affichage(df2,himmelblauFunction)
 
     df3 = gradient_descent2DMomentum(McCormickFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,mfdg.max_iter)
-    affichage(df3,McCormickFunction)
+    #affichage(df3,McCormickFunction)
 
     df4 = gradient_descent2D_AdAM(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
                                      mfdg.max_iter)
