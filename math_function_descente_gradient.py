@@ -2,9 +2,9 @@ import numpy as np
 
 h = 1e-9
 epsilon = 1e-6
-lambda_k = 0.15 #taille de pas λk > 0 (learning rate)
+lambda_k = 0.8 #taille de pas λk > 0 (learning rate)
 max_iter = 3000
-point_init = np.array([50, 35])
+point_init = np.array([30,30])
 
 #f = lambda x: pow(x,3)
 deriv = lambda f,trucMuche: (f(trucMuche+h) - f(trucMuche))/h
