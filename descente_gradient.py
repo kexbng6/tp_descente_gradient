@@ -7,7 +7,6 @@ from matplotlib.colors import LogNorm
 """
 Données d'initisalisation pour les calculs
 """
-pointInitial = [10, 10]
 momentum = 0.3
 learning = 0.03
 maxIter = 300000
@@ -16,12 +15,13 @@ b1 = 0.9
 b2 = 0.999
 
 """
-Fonction tester
+Fonctions testées
 """
 fct = lambda x, y: x ** 3 + 2 * y ** 2
 boothFunction = lambda x, y: (x + 2 * y - 7) ** 2 + (2 * x + y - 5) ** 2 #min global -> f(1,3) = 0
 himmelblauFunction = lambda x, y: (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2 #min global -> f(3.0,2.0) = 0
 McCormickFunction = lambda x,y: np.sin(x+y) + (x-y)**2 - 1.5*x + 2.5*y + 1 #min global -> f(-0.54719, -1.54719 = -1.9133
+Rosenbrock = lambda x,y: (1-x) ** 2 + 100*(y-x**2)**2 #(1−x)**2 + 100*(y−x**2)**2
 
 ########################################################################################################################
 
@@ -154,11 +154,11 @@ def affichage(resultDF,function):
     ax.plot_surface(X, Y, Z, cmap='jet', norm=LogNorm(), rstride=1, cstride=1, alpha=0.99)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
-    ax.contour(X, Y, Z, 30, lw=3, cmap='RdGy', offset=-1)
+    ax.contour(X, Y, Z, 30, cmap='RdGy', offset=-1)
     #ax.plot(resultDF['X'],resultDF['Y'],'-o', color='black')
 
     figure2 = plt.figure(2)
-    plt.contour(X, Y, Z, 20, lw=3, cmap='RdGy')
+    plt.contour(X, Y, Z, 20, cmap='RdGy')
     plt.plot(resultDF['X'], resultDF['Y'], '-o', color='black')
     plt.xlabel('x')
     plt.ylabel('y')
@@ -170,20 +170,23 @@ def affichage(resultDF,function):
 ########################################################################################################################
 
 if __name__ == "__main__":
-    df1 = gradient_descent2DMomentum(fct, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
-                                     mfdg.max_iter)
-    #affichage(df1,fct)
+    dfsimple = gradient_descent2D(McCormickFunction,mfdg.point_init,mfdg.lambda_k,tolerance,mfdg.max_iter)
+    #affichage(dfsimple, McCormickFunction)
 
-    #df2 = gradient_descent2DMomentum(himmelblauFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
-                                     #mfdg.max_iter)
+    df1 = gradient_descent2DMomentum(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
+                                     mfdg.max_iter)
+    #affichage(df1,boothFunction)
+
+    df2 = gradient_descent2DMomentum(himmelblauFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
+                                     mfdg.max_iter)
     #affichage(df2,himmelblauFunction)
 
-    df3 = gradient_descent2DMomentum(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,mfdg.max_iter)
-    #affichage(df3,boothFunction)
+    df3 = gradient_descent2DMomentum(McCormickFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,mfdg.max_iter)
+    affichage(df3,McCormickFunction)
 
     df4 = gradient_descent2D_AdAM(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
                                      mfdg.max_iter)
-    affichage(df4,boothFunction)
+    #affichage(df4,boothFunction)
 
 
 
