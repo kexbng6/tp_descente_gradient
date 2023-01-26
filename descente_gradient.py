@@ -8,8 +8,6 @@ from matplotlib.colors import LogNorm
 Données d'initisalisation pour les calculs
 """
 momentum = 0.3
-learning = 0.03
-maxIter = 300000
 tolerance = 1e-05
 b1 = 0.9
 b2 = 0.999
@@ -65,7 +63,6 @@ def gradient_descent2D(cost, start, learn_rate, tolerance, n_iter):
         if np.all(np.abs(normGrad) <= tolerance):
             df.loc[k + 1] = [k + 1, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
             break
-    # print(df)
     return df
 
 
@@ -113,22 +110,18 @@ def gradient_descent2D_AdAM(cost, start, learn_rate, momentum, tolerance, n_iter
     grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
     normGrad = np.linalg.norm(grad)
     step = np.array([0, 0])
-    #mk = 0  # moyenne mobile
     mk = np.array([0,0])
     vk = np.array([0,0])
     t=0
-    #vk = 0  # moyenne mobile
 
     for k in range(n_iter):
         t+=1
-        #grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
         grad = numericalDerivative(cost, vector[0], vector[1], 1e-05)
         mk = b1*mk + (1-b1) * grad #β1mk−1 + (1 − β1)∇fk
         vk = b2*vk + (1 - b2) * grad**2 # β2vk−1 + (1 − β2)∇fk ⊙ ∇fk
         m_corr = mk/(1-b1**t)
         v_corr = vk/(1-b2**t)
         step = learn_rate*m_corr/(np.sqrt(v_corr)+mfdg.epsilon)
-        #step = step - learn_rate * mk #learn_rate * grad + momentum * step
         vector = vector - step
         normGrad = np.linalg.norm(grad)
         df.loc[k] = [k, vector[0], vector[1], cost(vector[0], vector[1]), step[0], step[1], normGrad]
@@ -155,7 +148,6 @@ def affichage(resultDF,function):
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.contour(X, Y, Z, 30, cmap='RdGy', offset=-1)
-    #ax.plot(resultDF['X'],resultDF['Y'],'-o', color='black')
 
     figure2 = plt.figure(2)
     plt.contour(X, Y, Z, 20, cmap='RdGy')
@@ -187,17 +179,3 @@ if __name__ == "__main__":
     df4 = gradient_descent2D_AdAM(boothFunction, mfdg.point_init, mfdg.lambda_k, momentum, tolerance,
                                      mfdg.max_iter)
     affichage(df4,boothFunction)
-
-
-
-
-
-
-
-    # tester le momentum 0.9
-    # gradient_descent2DMomentum(fct, mfdg.point_init, mfdg.lambda_k, momentum, tolerance, mfdg.max_iter)
-    # test_derive(3)
-    # fct = lambda x: x**3
-    # https: // en.wikipedia.org / wiki / Test_functions_for_optimization
-    # steepest_descend(fct,2,mfdg.lambda_k, 0, mfd.epsilon, mfdg.max_iter)
-    # steepest_descend_2D(fct, mfdg.lambda_k, 0, mfdg.epsilon, mfdg.max_iter)
